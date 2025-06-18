@@ -7,47 +7,62 @@ import 'dart:io';
 
 class AddEmergencyContact extends StatefulWidget {
   static const String id = 'add_emergency_contact';
-  final String currentProfilePicture,
+  final String? currentProfilePicture,
       currentName,
       currentPhone,
       currentAddress,
       docid;
-  final int flag;
+  final int? flag;
   AddEmergencyContact(
       {this.currentProfilePicture,
-      this.currentName,
-      this.currentPhone,
-      this.currentAddress,
-      this.flag,
-      this.docid});
+        this.currentName,
+        this.currentPhone,
+        this.currentAddress,
+        this.flag,
+        this.docid});
   @override
   _AddEmergencyContactState createState() => _AddEmergencyContactState();
 }
 
 class _AddEmergencyContactState extends State<AddEmergencyContact> {
-  File profileImage;
+  File? profileImage;
   String profileImagePath = '';
   final picker = ImagePicker();
   String name = '', phoneNo = '', address = '';
   final formkey = GlobalKey<FormState>();
-  Future getImage(source) async {
-    final pickedFile = await picker.getImage(source: source);
+  // Future getImage(source) async {
+  //   final pickedFile = await picker.getImage(source: source);
+  //
+  //   setState(() {
+  //     if (pickedFile != null) {
+  //       profileImage = File(pickedFile.path);
+  //       profileImagePath = pickedFile.path;
+  //     }
+  //   });
+  //   print(pickedFile);
+  // }
 
-    setState(() {
-      if (pickedFile != null) {
+
+  Future<void> getImage(ImageSource source) async {
+    final XFile? pickedFile = await picker.pickImage(source: source);
+
+    if (pickedFile != null) {
+      setState(() {
         profileImage = File(pickedFile.path);
         profileImagePath = pickedFile.path;
-      }
-    });
-    print(pickedFile);
+      });
+      print('Picked file path: ${pickedFile.path}');
+    } else {
+      print('No image selected.');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     if (widget.flag == 0) {
-      name = widget.currentName;
-      phoneNo = widget.currentPhone;
-      address = widget.currentAddress;
+      name = widget.currentName!;
+      phoneNo = widget.currentPhone!;
+      address = widget.currentAddress!;
     }
     return Scaffold(
       appBar: AppBar(
@@ -111,7 +126,7 @@ class _AddEmergencyContactState extends State<AddEmergencyContact> {
             visible: true,
             child: TextButton(
               onPressed: () async {
-                if (formkey.currentState.validate()) {
+                if (formkey.currentState?.validate() == true) {
                   await DatabaseService().addEmergencyContact(name, phoneNo,
                       address, profileImagePath, widget.flag, widget.docid);
                   Navigator.pop(context);
@@ -136,14 +151,7 @@ class _AddEmergencyContactState extends State<AddEmergencyContact> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: CircleAvatar(
-                    backgroundImage: widget.currentProfilePicture != '' &&
-                            profileImage == null &&
-                            widget.flag == 0
-                        ? NetworkImage(widget.currentProfilePicture)
-                        : profileImage == null
-                            ? AssetImage(
-                                'assets/images/default_profile_pic.jpg')
-                            : FileImage(profileImage),
+                      backgroundImage: _getProfileImage(),
                     radius: 65,
                     child: Align(
                       alignment: Alignment.bottomRight,
@@ -205,7 +213,7 @@ class _AddEmergencyContactState extends State<AddEmergencyContact> {
                   child: TextFormField(
                     initialValue: name,
                     validator: (val) {
-                      return val.isEmpty ? 'Name cannot be empty' : null;
+                      return val?.isEmpty == true ? 'Name cannot be empty' : null;
                     },
                     onChanged: (val) {
                       name = val;
@@ -262,4 +270,17 @@ class _AddEmergencyContactState extends State<AddEmergencyContact> {
       ),
     );
   }
+
+  ImageProvider _getProfileImage() {
+    if (widget.currentProfilePicture != '' &&
+        profileImage == null &&
+        widget.flag == 0) {
+      return NetworkImage(widget.currentProfilePicture!);
+    } else if (profileImage == null) {
+      return const AssetImage('assets/images/default_profile_pic.jpg');
+    } else {
+      return FileImage(profileImage!);
+    }
+  }
+
 }

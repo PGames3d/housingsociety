@@ -4,12 +4,12 @@ import 'package:housingsociety/shared/constants.dart';
 import 'package:housingsociety/shared/loading.dart';
 
 class RealTimeCommentUpdates extends StatelessWidget {
-  final String docid;
+  final String? docid;
   final social;
   RealTimeCommentUpdates({this.docid, this.social});
   @override
   Widget build(BuildContext context) {
-    Query moduleComplaintUserComments = social == true
+    Query<Map<String, dynamic>>? moduleComplaintUserComments = social == true
         ? FirebaseFirestore.instance
             .collection('module_social_photos_comments')
             .where('docid', isEqualTo: docid)
@@ -31,7 +31,7 @@ class RealTimeCommentUpdates extends StatelessWidget {
         }
 
         return ListView(
-          children: snapshot.data.docs
+          children: (snapshot.data?.docs ?? [])
               .map((DocumentSnapshot<Map<String, dynamic>> document) {
             return Padding(
               padding: const EdgeInsets.all(8.0),
@@ -43,8 +43,8 @@ class RealTimeCommentUpdates extends StatelessWidget {
                   ),
                 ),
                 child: ListTile(
-                  title: Text(document.data()['userName']),
-                  subtitle: Text(document.data()['comment']),
+                  title: Text(document.data()?['userName']),
+                  subtitle: Text(document.data()?['comment']),
                 ),
               ),
             );

@@ -27,11 +27,11 @@ class _HealthState extends State<Health> {
   }
 
   void getInitialstatus() async {
-    DocumentSnapshot<Map<String, dynamic>> result =
-        await db.readIndividualHealthStatus(_auth.userId());
-    if (result.data()['health'] != null) {
+    DocumentSnapshot<Map<String, dynamic>>? result =
+        (await db.readIndividualHealthStatus(_auth.userId())) as DocumentSnapshot<Map<String, dynamic>>?;
+    if (result?.data()?['health'] != null) {
       setState(() {
-        groupvalue = result.data()['health'];
+        groupvalue = result?.data()?['health'];
       });
     }
   }
@@ -44,7 +44,7 @@ class _HealthState extends State<Health> {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<CurrentUser>(context);
+    final user = Provider.of<CurrentUser?>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -59,7 +59,7 @@ class _HealthState extends State<Health> {
                   groupValue: groupvalue,
                   onChanged: (value) {
                     setState(() {
-                      groupvalue = value;
+                      groupvalue = value as String;
                     });
                   },
                 ),
@@ -69,7 +69,7 @@ class _HealthState extends State<Health> {
                   groupValue: groupvalue,
                   onChanged: (value) {
                     setState(() {
-                      groupvalue = value;
+                      groupvalue = value as String;
                     });
                   },
                 ),
@@ -79,7 +79,7 @@ class _HealthState extends State<Health> {
                   groupValue: groupvalue,
                   onChanged: (value) {
                     setState(() {
-                      groupvalue = value;
+                      groupvalue = value as String;
                     });
                   },
                 ),
@@ -110,7 +110,7 @@ class _HealthState extends State<Health> {
           visible: selectedindex == 0,
           child: FloatingActionButton(
             onPressed: () {
-              db.addIndividualHealthStatus(user.uid, groupvalue);
+              db.addIndividualHealthStatus(user?.uid, groupvalue);
 
               final snackBar = SnackBar(
                 backgroundColor: kXiketic,

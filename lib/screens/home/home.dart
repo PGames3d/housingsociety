@@ -1,4 +1,5 @@
-import 'package:connectivity/connectivity.dart';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:housingsociety/screens/home/modules/chat/chat.dart';
 import 'package:housingsociety/screens/home/modules/complaints/complaint.dart';
@@ -20,7 +21,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final AuthService _auth = AuthService();
-  String userType;
+  String? userType;
 
   @override
   void initState() {
@@ -41,12 +42,9 @@ class _HomeState extends State<Home> {
     });
   }
 
-  Future checkConnectivity() async {
-    bool connectivity;
-    ConnectivityResult connectivityResult =
-        await Connectivity().checkConnectivity();
-    connectivity = connectivityResult == ConnectivityResult.none ? false : true;
-    return connectivity;
+  Future<bool> checkConnectivity() async {
+    final connectivityResult = await Connectivity().checkConnectivity();
+    return connectivityResult != ConnectivityResult.none;
   }
 
   @override

@@ -3,9 +3,9 @@ import 'package:housingsociety/shared/loading.dart';
 import 'package:translator/translator.dart';
 
 class Translate extends StatefulWidget {
-  final String title;
-  final String notice;
-  final String outputLanguage;
+  final String? title;
+  final String? notice;
+  final String? outputLanguage;
   static const String id = 'translate';
   Translate({this.title, this.notice, this.outputLanguage});
   @override
@@ -32,12 +32,12 @@ class _TranslateState extends State<Translate> {
   @override
   void initState() {
     super.initState();
-    translate(widget.title, widget.notice, widget.outputLanguage);
+    translate(widget.title ?? "", widget.notice ?? "", widget.outputLanguage?? "");
   }
 
   void translate(String title, String notice, String outputLanguage) {
     translator
-        .translate(title, to: outputLanguageCode[outputLanguage])
+        .translate(title, to: outputLanguageCode[outputLanguage]!)
         .then((result) {
       setState(() {
         translatedTitle = result.toString();
@@ -46,7 +46,7 @@ class _TranslateState extends State<Translate> {
       print(title);
     });
     translator
-        .translate(notice, to: outputLanguageCode[outputLanguage])
+        .translate(notice, to: outputLanguageCode[outputLanguage]!)
         .then((result) {
       setState(() {
         translatedNotice = result.toString();

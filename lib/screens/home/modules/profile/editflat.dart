@@ -15,7 +15,7 @@ class _EditFlatState extends State<EditFlat> {
   String flatno = '';
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<CurrentUser>(context);
+    final user = Provider.of<CurrentUser?>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('Edit Flat no'),
@@ -59,7 +59,7 @@ class _EditFlatState extends State<EditFlat> {
         visible: wing != '' && flatno != '',
         child: FloatingActionButton(
           onPressed: () {
-            DatabaseService().updateFlatNo(user.uid, wing, flatno);
+            DatabaseService().updateFlatNo(user?.uid ?? "", wing, flatno);
             Navigator.pop(context);
           },
           child: Icon(Icons.done),

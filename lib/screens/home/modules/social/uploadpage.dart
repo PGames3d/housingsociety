@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 
 class UploadPage extends StatefulWidget {
   static const String id = 'upload_page';
-  final String username;
+  final String? username;
   UploadPage({this.username});
   @override
   _UploadPageState createState() => _UploadPageState();
@@ -17,12 +17,12 @@ class UploadPage extends StatefulWidget {
 class _UploadPageState extends State<UploadPage> {
   final StorageService storage = StorageService();
   String caption = '';
-  File photo;
-  String photoPath;
+  File? photo;
+  String? photoPath;
   final picker = ImagePicker();
 
   Future getImage(source, uid) async {
-    final pickedFile = await picker.getImage(
+    final XFile? pickedFile = await picker.pickImage(
       source: source,
       imageQuality: 50,
     );
@@ -37,7 +37,7 @@ class _UploadPageState extends State<UploadPage> {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<CurrentUser>(context);
+    final user = Provider.of<CurrentUser?>(context);
     print(widget.username);
     void addPhoto() {
       showModalBottomSheet(
@@ -58,7 +58,7 @@ class _UploadPageState extends State<UploadPage> {
                   leading: Icon(Icons.camera_alt),
                   title: Text('Choose from Camera'),
                   onTap: () {
-                    getImage(ImageSource.camera, user.uid);
+                    getImage(ImageSource.camera, user?.uid);
                     Navigator.pop(context);
                   },
                 ),
@@ -67,7 +67,7 @@ class _UploadPageState extends State<UploadPage> {
                   leading: Icon(Icons.collections),
                   title: Text('Choose from gallery'),
                   onTap: () {
-                    getImage(ImageSource.gallery, user.uid);
+                    getImage(ImageSource.gallery, user?.uid);
                     Navigator.pop(context);
                   },
                 ),
@@ -90,8 +90,8 @@ class _UploadPageState extends State<UploadPage> {
                 color: kAmaranth,
               ),
               onPressed: () {
-                storage.uploadPhoto(photoPath, user.uid, caption,
-                    widget.username, user.profilePicture);
+                storage.uploadPhoto(photoPath??"", user?.uid??"", caption,
+                    widget.username??"", user?.profilePicture??"");
                 Navigator.pop(context);
               },
             ),
@@ -129,7 +129,7 @@ class _UploadPageState extends State<UploadPage> {
                 ? SizedBox(
                     height: 0,
                   )
-                : Image.file(photo),
+                : Image.file(photo!),
           ],
         ),
       ),

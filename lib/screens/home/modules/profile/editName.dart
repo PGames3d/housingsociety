@@ -17,7 +17,7 @@ class _EditNameState extends State<EditName> {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<CurrentUser>(context);
+    final user = Provider.of<CurrentUser?>(context);
     final userName = AuthService().userName();
 
     return loading == true
@@ -52,7 +52,7 @@ class _EditNameState extends State<EditName> {
                     loading = true;
                   });
                   await DatabaseService()
-                      .updateProfileName(user.uid, updatedName);
+                      .updateProfileName(user?.uid, updatedName);
                   setState(() {
                     loading = false;
                   });

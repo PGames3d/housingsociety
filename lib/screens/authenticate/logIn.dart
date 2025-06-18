@@ -5,7 +5,7 @@ import 'package:housingsociety/shared/loading.dart';
 import 'package:housingsociety/shared/snackbarpage.dart';
 
 class LogIn extends StatefulWidget {
-  final Function toggle;
+  final Function? toggle;
   LogIn({this.toggle});
   @override
   _LogInState createState() => _LogInState();
@@ -15,7 +15,7 @@ class _LogInState extends State<LogIn> {
   final AuthService _auth = AuthService();
   final _formkey = GlobalKey<FormState>();
 
-  String _email, _password;
+  String? _email, _password;
   bool buttonEnabled = false;
   bool obscureText = true;
   bool loading = false;
@@ -69,7 +69,7 @@ class _LogInState extends State<LogIn> {
                               });
                             },
                             validator: (val) {
-                              return val.isEmpty ? 'Enter an email' : null;
+                              return val?.isEmpty == true ? 'Enter an email' : null;
                             },
                             decoration: InputDecoration(
                               labelText: 'Email ID',
@@ -87,7 +87,7 @@ class _LogInState extends State<LogIn> {
                               });
                             },
                             validator: (val) {
-                              return val.length < 4
+                              return val!.length < 4
                                   ? 'Password must be minimum of 4 characters'
                                   : null;
                             },
@@ -110,17 +110,17 @@ class _LogInState extends State<LogIn> {
                             width: double.infinity,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                primary: kAmaranth,
+                                backgroundColor: kAmaranth,
                               ),
                               // color: kAmaranth,
                               onPressed: () async {
-                                if (_formkey.currentState.validate()) {
+                                if (_formkey.currentState!.validate()) {
                                   setState(() {
                                     loading = true;
                                   });
                                   dynamic result =
                                       await _auth.logInWithEmailAndPassword(
-                                          _email, _password);
+                                          _email!, _password!);
                                   if (result == null) {
                                     setState(() {
                                       loading = false;
@@ -137,7 +137,7 @@ class _LogInState extends State<LogIn> {
                           ),
                           TextButton(
                             onPressed: () {
-                              widget.toggle();
+                              widget.toggle!();
                             },
                             child: Text(
                               'Create a new account',

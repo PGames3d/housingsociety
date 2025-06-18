@@ -37,7 +37,7 @@ class _EditEmailState extends State<EditEmail> {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<CurrentUser>(context);
+    final user = Provider.of<CurrentUser?>(context);
     return loading == true
         ? Loading()
         : Scaffold(
@@ -49,7 +49,7 @@ class _EditEmailState extends State<EditEmail> {
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: TextFormField(
-                    initialValue: user.email,
+                    initialValue: user?.email,
                     decoration: InputDecoration(
                       labelText: 'New Email ID',
                     ),
@@ -84,7 +84,7 @@ class _EditEmailState extends State<EditEmail> {
               ],
             ),
             floatingActionButton: Visibility(
-              visible: (updatedEmail != user.email && updatedEmail != '') &&
+              visible: (updatedEmail != user?.email && updatedEmail != '') &&
                       password != '' &&
                       password.length > 4
                   ? true

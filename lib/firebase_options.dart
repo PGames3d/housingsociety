@@ -47,11 +47,11 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDOSfgAGVhR5ApNLl27UrStyZ2T6js0DAk',
-    appId: '1:411194630020:android:ee990a0a8172d33199c7d1',
-    messagingSenderId: '411194630020',
-    projectId: 'housingsociety786',
-    storageBucket: 'housingsociety786.appspot.com',
+    apiKey: 'AIzaSyA5TFKa1znMtel20It0XmeqzT6qMp8NO-Y',
+    appId: '1:1022340508105:android:494e024c1219e855afe018',
+    messagingSenderId: '1022340508105',
+    projectId: 'housingsociety-13be5',
+    storageBucket: 'housingsociety-13be5.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(

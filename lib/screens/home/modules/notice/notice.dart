@@ -12,7 +12,7 @@ class Notice extends StatefulWidget {
 }
 
 class _NoticeState extends State<Notice> {
-  String userType;
+  String? userType;
   String noticeType = 'notice';
   @override
   void initState() {
@@ -62,14 +62,14 @@ class _NoticeState extends State<Notice> {
                 });
               },
               style: TextButton.styleFrom(
-                primary: noticeType == 'notice' ? kAmaranth : Colors.white,
+                foregroundColor: noticeType == 'notice' ? kAmaranth : Colors.white,
               ),
               icon: Icon(Icons.info),
               label: Text('Notice'),
             ),
             TextButton.icon(
               style: TextButton.styleFrom(
-                primary: noticeType == 'event' ? kAmaranth : Colors.white,
+                foregroundColor: noticeType == 'event' ? kAmaranth : Colors.white,
               ),
               onPressed: () {
                 setState(() {

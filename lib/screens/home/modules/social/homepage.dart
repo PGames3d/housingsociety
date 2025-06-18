@@ -12,7 +12,7 @@ class HomePageSocial extends StatefulWidget {
 }
 
 class _HomePageSocialState extends State<HomePageSocial> {
-  Map<String, dynamic> likes;
+  Map<String, dynamic>? likes;
   CollectionReference moduleSocialPhotosLikes =
       FirebaseFirestore.instance.collection('module_social_photos_likes');
   dynamic userid = AuthService().userId();
@@ -30,7 +30,7 @@ class _HomePageSocialState extends State<HomePageSocial> {
       print(documentSnapshot.data());
       if (documentSnapshot.exists) {
         setState(() {
-          likes = documentSnapshot.data();
+          likes = documentSnapshot.data() as Map<String, dynamic>?;
         });
       } else {
         setState(() {
@@ -43,11 +43,11 @@ class _HomePageSocialState extends State<HomePageSocial> {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<CurrentUser>(context);
-    List<String> usersFollowed = [user.uid];
-    CollectionReference moduleSocial = FirebaseFirestore.instance
+    final user = Provider.of<CurrentUser?>(context);
+    List<String> usersFollowed = [user?.uid ?? ""];
+    CollectionReference<Map<String, dynamic>> moduleSocial = FirebaseFirestore.instance
         .collection('module_social')
-        .doc(user.uid)
+        .doc(user?.uid)
         .collection('following');
 
     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
@@ -58,11 +58,11 @@ class _HomePageSocialState extends State<HomePageSocial> {
           return Text('Something went wrong');
         }
 
-        snapshot.data.docs.forEach((user) {
+        snapshot.data?.docs.forEach((user) {
           usersFollowed.add(user.data()['uid']);
         });
 
-        Query moduleSocialPhotosCurrentUser = FirebaseFirestore.instance
+        Query<Map<String, dynamic>> moduleSocialPhotosCurrentUser = FirebaseFirestore.instance
             .collection('module_social_photos')
             .where('uid', whereIn: usersFollowed)
             .orderBy('timestamp', descending: true);
@@ -78,13 +78,13 @@ class _HomePageSocialState extends State<HomePageSocial> {
               return Loading();
             }
             return ListView(
-              children: photosSnapshot.data.docs
+              children:( photosSnapshot.data?.docs ?? [])
                   .map((DocumentSnapshot<Map<String, dynamic>> document) {
                 return likes == null
                     ? Loading()
                     : ReusablePostDisplayTile(
                         document: document,
-                        likes: likes,
+                        likes: likes!,
                       );
               }).toList(),
             );

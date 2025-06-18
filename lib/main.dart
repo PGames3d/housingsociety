@@ -18,8 +18,8 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<CurrentUser>.value(
-      initialData: null,
+    return StreamProvider<CurrentUser?>.value(
+      initialData: CurrentUser(),
       value: AuthService().user,
       child: MaterialApp(
         theme: ThemeData.dark().copyWith(

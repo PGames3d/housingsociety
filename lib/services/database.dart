@@ -174,7 +174,7 @@ class DatabaseService {
         .get()
         .then((DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
       if (documentSnapshot.exists) {
-        result = (documentSnapshot.data()[docuid]);
+        result = (documentSnapshot.data()?[docuid]);
         if (result == true) {
           moduleLikesName.doc(useruid).update({
             docuid: FieldValue.delete(),
@@ -208,7 +208,7 @@ class DatabaseService {
     return result;
   }
 
-  Future<void> addComment(
+  Future? addComment(
       bool social, docid, userName, comment, socialusername) {
     if (social == true) {
       moduleSocialPhotosComments.add({

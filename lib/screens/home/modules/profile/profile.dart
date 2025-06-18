@@ -22,32 +22,52 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  File profileImage;
+  File? profileImage;
   final picker = ImagePicker();
   bool loading = false;
   StorageService storage = StorageService();
 
-  Future getImage(source, uid) async {
-    final pickedFile = await picker.getImage(
+  // Future getImage(source, uid) async {
+  //   final pickedFile = await picker.getImage(
+  //     source: source,
+  //     imageQuality: 50,
+  //   );
+  //   String profileImagePath;
+  //
+  //   setState(() {
+  //     if (pickedFile != null) {
+  //       profileImage = File(pickedFile.path);
+  //       profileImagePath = pickedFile.path;
+  //       storage.uploadProfilePicture(profileImagePath, uid);
+  //     }
+  //   });
+  // }
+
+  Future<void> getImage(ImageSource source, String uid) async {
+    final XFile? pickedFile = await picker.pickImage(
       source: source,
       imageQuality: 50,
     );
-    String profileImagePath;
 
-    setState(() {
-      if (pickedFile != null) {
-        profileImage = File(pickedFile.path);
-        profileImagePath = pickedFile.path;
-        storage.uploadProfilePicture(profileImagePath, uid);
-      }
-    });
+    if (pickedFile != null) {
+      String profileImagePath = pickedFile.path;
+      File profileImage = File(pickedFile.path);
+
+      setState(() {
+        this.profileImage = profileImage; // assuming you have this variable in state
+      });
+
+      storage.uploadProfilePicture(profileImagePath, uid);
+    } else {
+      print('No image selected.');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<CurrentUser>(context);
+    final user = Provider.of<CurrentUser?>(context);
     DocumentReference userProfile =
-        FirebaseFirestore.instance.collection('user_profile').doc(user.uid);
+        FirebaseFirestore.instance.collection('user_profile').doc(user?.uid);
     return StreamBuilder<DocumentSnapshot>(
         stream: userProfile.snapshots(),
         builder:
@@ -72,10 +92,10 @@ class _ProfileState extends State<Profile> {
                       child: CircleAvatar(
                         radius: 65.0,
                         //backgroundColor: Colors.white,
-                        backgroundImage: snapshot.data['profile_picture'] == ''
+                        backgroundImage: snapshot.data?['profile_picture'] == ''
                             ? AssetImage(
                                 'assets/images/default_profile_pic.jpg')
-                            : NetworkImage(snapshot.data['profile_picture']),
+                            : NetworkImage(snapshot.data?['profile_picture']) as ImageProvider,
                         child: Align(
                           alignment: Alignment.bottomRight,
                           child: Container(
@@ -103,7 +123,7 @@ class _ProfileState extends State<Profile> {
                                             title: Text('Choose from Camera'),
                                             onTap: () {
                                               getImage(
-                                                  ImageSource.camera, user.uid);
+                                                  ImageSource.camera, user?.uid??"");
                                               Navigator.pop(context);
                                             },
                                           ),
@@ -113,7 +133,7 @@ class _ProfileState extends State<Profile> {
                                             title: Text('Choose from gallery'),
                                             onTap: () {
                                               getImage(ImageSource.gallery,
-                                                  user.uid);
+                                                  user?.uid??"");
                                               Navigator.pop(context);
                                             },
                                           )
@@ -134,21 +154,21 @@ class _ProfileState extends State<Profile> {
                     ReusableProfileTile(
                       label: 'Name',
                       //value: AuthService().userName(),
-                      value: user.name,
+                      value: user?.name ?? "",
                       onpress: () {
                         Navigator.pushNamed(context, EditName.id);
                       },
                     ),
                     ReusableProfileTile(
                       label: 'Email',
-                      value: user.email,
+                      value: user?.email ?? "",
                       onpress: () {
                         Navigator.pushNamed(context, EditEmail.id);
                       },
                     ),
                     ReusableProfileTile(
                       label: 'Phone',
-                      value: snapshot.data['phone_no'],
+                      value: snapshot.data?['phone_no'],
                       onpress: () {
                         Navigator.pushNamed(context, EditPhoneNumber.id);
                       },
@@ -162,15 +182,15 @@ class _ProfileState extends State<Profile> {
                     ),
                     ReusableProfileTile(
                       label: 'Flat no',
-                      value: snapshot.data['wing'] +
+                      value: snapshot.data?['wing'] +
                           '  ' +
-                          snapshot.data['flatno'],
+                          snapshot.data?['flatno'],
                       onpress: () {
                         Navigator.pushNamed(context, EditFlat.id);
                       },
                     ),
                     Visibility(
-                      visible: snapshot.data['userType'] == 'admin',
+                      visible: snapshot.data?['userType'] == 'admin',
                       child: ReusableProfileTile(
                         label: 'Manage Residents',
                         value: '',

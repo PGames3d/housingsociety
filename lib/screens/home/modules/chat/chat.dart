@@ -16,10 +16,10 @@ class Chat extends StatefulWidget {
 class _ChatState extends State<Chat> {
   DatabaseService db = DatabaseService();
 
-  String message;
+  String? message;
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<CurrentUser>(context);
+    final user = Provider.of<CurrentUser?>(context);
     var _textController = TextEditingController();
     return Scaffold(
       appBar: AppBar(
@@ -69,8 +69,8 @@ class _ChatState extends State<Chat> {
                         message != null
                             ? db.addMessage(
                                 message,
-                                user.name ?? AuthService().userName(),
-                                user.email,
+                                user?.name ?? AuthService().userName(),
+                                user?.email,
                                 Timestamp.now())
                             : print('null');
                         _textController.clear();

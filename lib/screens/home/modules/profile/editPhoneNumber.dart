@@ -11,7 +11,7 @@ class EditPhoneNumber extends StatefulWidget {
 
 class _EditPhoneNumberState extends State<EditPhoneNumber> {
   String phoneNumber = '';
-  String verificationId;
+  String? verificationId;
 
   // Future<void> verifyPhoneNo() async{
 
@@ -42,7 +42,7 @@ class _EditPhoneNumberState extends State<EditPhoneNumber> {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<CurrentUser>(context);
+    final user = Provider.of<CurrentUser?>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('Update your phone number'),
@@ -68,7 +68,7 @@ class _EditPhoneNumberState extends State<EditPhoneNumber> {
             Icons.save,
           ),
           onPressed: () async {
-            await DatabaseService().updatePhoneNumber(user.uid, phoneNumber);
+            await DatabaseService().updatePhoneNumber(user?.uid, phoneNumber);
             Navigator.pop(context);
           },
         ),

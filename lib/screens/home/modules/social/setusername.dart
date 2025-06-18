@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 class SetUserName extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<CurrentUser>(context);
+    final user = Provider.of<CurrentUser?>(context);
     CollectionReference moduleSocialUserNames =
         FirebaseFirestore.instance.collection('module_social_usernames');
     String username = '';
@@ -56,7 +56,7 @@ class SetUserName extends StatelessWidget {
               if (doc.exists) {
                 showSnackbar('Username already exists');
               } else {
-                DatabaseService().setUserNameSocial(username, user.uid);
+                DatabaseService().setUserNameSocial(username, user?.uid ?? "");
               }
             });
           }

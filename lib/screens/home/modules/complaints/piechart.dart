@@ -4,7 +4,7 @@ import 'package:pie_chart/pie_chart.dart';
 import 'dart:collection';
 
 class PieChartComplaints extends StatefulWidget {
-  final Map<String, double> dataMap;
+  final Map<String, double>? dataMap;
   PieChartComplaints({this.dataMap});
 
   @override
@@ -20,11 +20,22 @@ class _PieChartComplaintsState extends State<PieChartComplaints> {
     super.initState();
     //newDataMap = widget.dataMap;
     print(widget.dataMap);
-    var sortedKeys = widget.dataMap.keys.toList(growable: false)
-      ..sort((k2, k1) => widget.dataMap[k1].compareTo(widget.dataMap[k2]));
-    sortedMap = new LinkedHashMap.fromIterable(sortedKeys,
-        key: (k) => k, value: (k) => widget.dataMap[k]);
-    newDataMap = sortedMap;
+    if (widget.dataMap != null) {
+      final dataMap = widget.dataMap!;
+
+      // Sort the keys by their values in descending order
+      final sortedKeys = dataMap.keys.toList()
+        ..sort((k1, k2) => dataMap[k2]!.compareTo(dataMap[k1]!));
+
+      final sortedMap = LinkedHashMap<String, double>.fromIterable(
+        sortedKeys,
+        key: (k) => k as String,
+        value: (k) => dataMap[k]!,
+      );
+
+      newDataMap = sortedMap;
+    }
+
     print(sortedMap);
   }
 
@@ -61,7 +72,7 @@ class _PieChartComplaintsState extends State<PieChartComplaints> {
                           onPressed: () {
                             if (int.parse(noOfProblems) < 1 ||
                                 int.parse(noOfProblems) >
-                                    widget.dataMap.length) {
+                                    widget.dataMap!.length) {
                               showDialog(
                                 context: context,
                                 builder: (BuildContext context) => AlertDialog(
@@ -74,7 +85,7 @@ class _PieChartComplaintsState extends State<PieChartComplaints> {
                                     )
                                   ],
                                   content: Text(
-                                      'No of problems must be in the range 1-${widget.dataMap.length}'),
+                                      'No of problems must be in the range 1-${widget.dataMap?.length}'),
                                 ),
                               );
                               // final snackBar = SnackBar(
@@ -94,7 +105,7 @@ class _PieChartComplaintsState extends State<PieChartComplaints> {
                                   i++) {
                                 setState(() {
                                   newDataMap[keys.elementAt(i)] =
-                                      sortedMap[keys.elementAt(i)];
+                                      sortedMap[keys.elementAt(i)]!;
                                 });
                               }
                               print(newDataMap);

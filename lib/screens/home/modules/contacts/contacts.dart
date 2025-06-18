@@ -16,7 +16,7 @@ class Contacts extends StatefulWidget {
 
 class _ContactsState extends State<Contacts> {
   int _selectedIndex = 0;
-  String userType;
+  String? userType;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -77,35 +77,32 @@ class _ContactsState extends State<Contacts> {
                   return Loading();
                 }
                 return ListView(
-                  children: snapshot.data.docs
+                  children: (snapshot.data?.docs ?? [])
                       .map((DocumentSnapshot<Map<String, dynamic>> document) {
-                    return document.data()['phone_no'] == ''
+                    return document.data()?['phone_no'] == ''
                         ? SizedBox(
                             height: 0,
                           )
                         : ListTile(
                             leading: CircleAvatar(
-                              backgroundImage: document
-                                          .data()['profile_picture'] ==
-                                      ''
-                                  ? AssetImage(
-                                      'assets/images/default_profile_pic.jpg')
-                                  : NetworkImage(
-                                      document.data()['profile_picture']),
-                            ),
+                              backgroundImage: (document.data()?['profile_picture'] == ''
+                                  ? const AssetImage('assets/images/default_profile_pic.jpg')
+                                  : NetworkImage(document.data()?['profile_picture']) as ImageProvider),
+                            )
+                      ,
                             title: Text(
-                              document.data()['name'],
+                              document.data()?['name'],
                             ),
                             subtitle: Text(
-                              document.data()['wing'] +
+                              document.data()?['wing'] +
                                   ' ' +
-                                  document.data()['flatno'],
+                                  document.data()?['flatno'],
                             ),
                             trailing: IconButton(
                               color: kAmaranth,
                               icon: Icon(Icons.call),
                               onPressed: () {
-                                launch("tel://" + document.data()['phone_no']);
+                                launch("tel://" + document.data()?['phone_no']);
                               },
                             ),
                           );

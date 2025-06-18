@@ -23,7 +23,7 @@ class WrapperSocial extends StatefulWidget {
 
 class _WrapperSocialState extends State<WrapperSocial> {
   int _selectedIndex = 0;
-  File photo;
+  File? photo;
   final picker = ImagePicker();
   StorageService storage = StorageService();
   String username = '';
@@ -50,14 +50,14 @@ class _WrapperSocialState extends State<WrapperSocial> {
     super.initState();
     moduleSocial.get().then((document) {
       setState(() {
-        username = document.data()['username'];
+        username = document.data()?['username'];
       });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<CurrentUser>(context);
+    final user = Provider.of<CurrentUser?>(context);
 
     List<Widget> _appbartitleoptions = [
       Text('Home'),
@@ -77,7 +77,7 @@ class _WrapperSocialState extends State<WrapperSocial> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Loading();
           }
-          if (snapshot.data['username'] == '') {
+          if (snapshot.data?['username'] == '') {
             return SetUserName();
           }
           return Scaffold(
@@ -119,9 +119,9 @@ class _WrapperSocialState extends State<WrapperSocial> {
                 ),
                 BottomNavigationBarItem(
                   icon: CircleAvatar(
-                    backgroundImage: user.profilePicture == null
+                    backgroundImage: user?.profilePicture == null
                         ? AssetImage('assets/images/default_profile_pic.jpg')
-                        : NetworkImage(user.profilePicture),
+                        : NetworkImage(user?.profilePicture ?? "") as ImageProvider,
                     radius: 12,
                   ),
                   label: 'Profile',

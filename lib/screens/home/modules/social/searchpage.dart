@@ -63,7 +63,7 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    final currentUser = Provider.of<CurrentUser>(context);
+    final currentUser = Provider.of<CurrentUser?>(context);
     return Container(
       child: Column(
         children: [
@@ -87,7 +87,7 @@ class _SearchPageState extends State<SearchPage> {
               return ListTile(
                 onTap: () {
                   moduleSocial
-                      .doc(currentUser.uid)
+                      .doc(currentUser?.uid)
                       .collection('following')
                       .doc(user['uid'])
                       .get()
@@ -111,7 +111,7 @@ class _SearchPageState extends State<SearchPage> {
                 leading: CircleAvatar(
                   backgroundImage: user['profile_picture'] == ''
                       ? AssetImage('assets/images/default_profile_pic.jpg')
-                      : NetworkImage(user['profile_picture']),
+                      : NetworkImage(user['profile_picture']) as ImageProvider,
                 ),
                 title: Text(user['username']),
               );
